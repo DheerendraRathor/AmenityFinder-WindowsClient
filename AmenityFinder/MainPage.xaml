@@ -6,8 +6,23 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
+    <Page.BottomAppBar>
+        <CommandBar>
+            <CommandBar.Content>
+                <Grid/>
+            </CommandBar.Content>
+            <AppBarButton x:Name="SkipButton" Label="Skip" Icon="Forward"/>
+        </CommandBar>
+    </Page.BottomAppBar>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Image x:Name="image" HorizontalAlignment="Left" Height="129" Margin="118,105,0,0" VerticalAlignment="Top" Width="124" Source="Assets/Square150x150Logo.png"/>
+        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="75,234,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="40" Width="211" RenderTransformOrigin="0.067,-0.385" Foreground="#FF0A0101" FontSize="26.667">
+        	<Run Text="Washroom Finder"/>
+        	<LineBreak/>
+        	<Run/>
+        </TextBlock>
+        <Button Click="FbLoginButton_onClick" x:Name="button" Content="Login With Facebook" Margin="75,323,0,0" VerticalAlignment="Top" Height="41" Width="167" RenderTransformOrigin="0.583,0.516"/>
 
     </Grid>
 </Page>
