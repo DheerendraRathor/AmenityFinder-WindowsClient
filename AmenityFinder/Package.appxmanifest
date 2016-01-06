@@ -22,7 +22,7 @@
       </uap:VisualElements>
       <Extensions>
         <uap:Extension Category="windows.protocol">
-          <uap:Protocol Name="afconnect" />
+          <uap:Protocol Name="msft-9cca4bcf684046e19596c45e910d77db" />
         </uap:Extension>
       </Extensions>
     </Application>

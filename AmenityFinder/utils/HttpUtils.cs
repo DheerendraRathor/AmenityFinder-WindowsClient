@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.ServiceModel.Security;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -64,10 +61,15 @@ namespace AmenityFinder.utils
             return response;
         }
 
-        public async Task<HttpResponseMessage> MakeRequest(string url, HttpStringContent reqMsg, HttpMethod httpMethod)
+        public async Task<HttpResponseMessage> MakeRequest(string url, string reqMsg, HttpMethod httpMethod)
         {
             var uri = new Uri(url);
             var httpClient = new HttpClient();
+            HttpStringContent httpStringContent = null;
+            if (reqMsg != null)
+            {
+                PrepareRequest(out httpStringContent, reqMsg);
+            }
             AddAuthToken(ref httpClient);
 
             HttpResponseMessage response = null;
@@ -79,7 +81,7 @@ namespace AmenityFinder.utils
 
             try
             {
-                response = await policy.ExecuteAsync(() => MakeRequestHelper(httpClient, uri, reqMsg, httpMethod));
+                response = await policy.ExecuteAsync(() => MakeRequestHelper(httpClient, uri, httpStringContent, httpMethod));
             }
             catch (COMException)
             {
@@ -91,9 +93,41 @@ namespace AmenityFinder.utils
 
         }
 
-        public void ProcessResponse(HttpResponseMessage response)
+        public async Task<string> ProcessResponse(HttpResponseMessage response)
         {
+            _cts = new CancellationTokenSource(Constants.Timeout);
             
+
+            HttpStatusCode statusCode = response.StatusCode;
+
+            if (statusCode == HttpStatusCode.Ok)
+            {
+                try
+                {
+                    return await response.Content.ReadAsStringAsync().AsTask(_cts.Token);
+                }
+                catch (Exception)
+                {
+                    throw new HttpRequestInvalidDataException("Failed to get data from response");
+                }
+            }
+            else if (statusCode == HttpStatusCode.Forbidden)
+            {
+                throw new ForbiddenRequestException();
+            }
+            else if (statusCode == HttpStatusCode.BadRequest)
+            {
+                throw new BadRequestException();
+            }
+            else if ((int) statusCode >= 500 && (int) statusCode <= 600)
+            {
+                throw new ServerException();
+            }
+            else
+            {
+                throw new AmenityFinderBaseException("Error processing request");
+            }
+
         }
 
         private void AddAuthToken(ref HttpClient httpClient)

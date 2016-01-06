@@ -9,7 +9,8 @@ namespace AmenityFinder.utils
     public class Constants
     {
 
-        public const string UserTokenName = "Token-Auth";
+        public const string UserTokenName = "auth-token";
+        public const string FbAccessTokenName = "access_token";
         public const int Timeout = 10000;
 
         public const string Scheme = "https";

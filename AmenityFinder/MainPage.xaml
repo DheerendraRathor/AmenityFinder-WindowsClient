@@ -22,7 +22,8 @@
         	<LineBreak/>
         	<Run/>
         </TextBlock>
-        <Button Click="FbLoginButton_onClick" x:Name="button" Content="Login With Facebook" Margin="75,323,0,0" VerticalAlignment="Top" Height="41" Width="167" RenderTransformOrigin="0.583,0.516"/>
+        <Button Click="FbLoginButton_onClick" x:Name="FButton" Content="Login With Facebook" Margin="90,322,0,0" VerticalAlignment="Top" Height="41" Width="167" RenderTransformOrigin="0.583,0.516"/>
+        <TextBlock Visibility="Collapsed" x:Name="FBFailedBlock"  HorizontalAlignment="Left" Margin="111,416,0,0" TextWrapping="Wrap" Text="Facebook Login Failed" VerticalAlignment="Top" Foreground="#FF8B0A0A"/>
 
     </Grid>
 </Page>

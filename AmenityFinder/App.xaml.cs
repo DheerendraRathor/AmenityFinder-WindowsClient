@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -14,6 +16,8 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using AmenityFinder.utils;
+
 
 namespace AmenityFinder
 {
@@ -22,6 +26,8 @@ namespace AmenityFinder
     /// </summary>
     sealed partial class App : Application
     {
+        private ApplicationDataContainer _localSettings = ApplicationData.Current.LocalSettings;
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -103,6 +109,59 @@ namespace AmenityFinder
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: Save application state and stop any background activity
             deferral.Complete();
+        }
+
+        protected override void OnActivated(IActivatedEventArgs args)
+        {
+            if (args.Kind == ActivationKind.Protocol)
+            {
+                var eventArgs = args as ProtocolActivatedEventArgs;
+                string accessToken = null;
+
+                if (eventArgs != null)
+                {
+                    var uri = eventArgs.Uri;
+                    //string accessToken = HttpUtility.ParseQueryString(uri.Query);
+                    var decoder = new WwwFormUrlDecoder(uri.Query);
+                    var uriDict = decoder.ToDictionary(x => x.Name, x => x.Value);
+                    if (uriDict.ContainsKey("access_token"))
+                    {
+                        accessToken = uriDict["access_token"];
+                    }
+                }
+
+                _localSettings.Values[Constants.FbAccessTokenName] = accessToken;
+
+                Frame rootFrame = Window.Current.Content as Frame;
+
+                // Do not repeat app initialization when the Window already has content,
+                // just ensure that the window is active
+                if (rootFrame == null)
+                {
+                    // Create a Frame to act as the navigation context and navigate to the first page
+                    rootFrame = new Frame();
+
+                    rootFrame.NavigationFailed += OnNavigationFailed;
+
+                    if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)
+                    {
+                        //TODO: Load state from previously suspended application
+                    }
+
+                    // Place the frame in the current Window
+                    Window.Current.Content = rootFrame;
+                }
+
+                if (rootFrame.Content == null)
+                {
+                    // When the navigation stack isn't restored navigate to the first page,
+                    // configuring the new page by passing required information as a navigation
+                    // parameter
+                    rootFrame.Navigate(typeof(MainPage), args);
+                }
+                // Ensure the current window is active
+                Window.Current.Activate();
+            }
         }
     }
 }

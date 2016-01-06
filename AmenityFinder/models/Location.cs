@@ -35,4 +35,12 @@ namespace AmenityFinder.models
 
     }
 
+    public class SearchByBBox : AbstractModel
+    {
+        public float LatMin { get; set; }
+        public float LongMin { get; set; }
+        public float LatMax { get; set; }
+        public float LongMax { get; set; }
+    }
+
 }

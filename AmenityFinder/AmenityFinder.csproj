@@ -99,18 +99,23 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="exceptions\AmenityFinderBaseException.cs" />
+    <Compile Include="exceptions\HttpRequestFailedException.cs" />
+    <Compile Include="fblogin\FbAuthCallback.cs" />
     <Compile Include="fblogin\FbLogin.xaml.cs">
       <DependentUpon>FbLogin.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="models\AbstractModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="utils\Constants.cs" />
     <Compile Include="utils\HttpUtils.cs" />
     <Compile Include="models\Location.cs" />
     <Compile Include="models\Post.cs" />
     <Compile Include="models\User.cs" />
+    <Compile Include="utils\Json.cs" />
     <Compile Include="utils\Requests.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -142,9 +147,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="exceptions\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

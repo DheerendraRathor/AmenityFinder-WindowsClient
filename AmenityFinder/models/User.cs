@@ -7,4 +7,16 @@
         public string FirstName { get; set; }
         public string LastName { get; set; }
     }
+
+    public class AccessTokenModel : AbstractModel
+    {
+        public string AccessToken { get; set; }
+    }
+
+    public class AuthenticationResponseModel : AbstractModel
+    {
+        public bool Success { get; set; }
+        public string Token { get; set; }
+        public string Error { get; set; }
+    }
 }
