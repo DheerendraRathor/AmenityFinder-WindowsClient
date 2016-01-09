@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
@@ -15,6 +16,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using AmenityFinder.models;
 using AmenityFinder.utils;
+using static AmenityFinder.utils.Requests;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -30,15 +32,54 @@ namespace AmenityFinder
         public MainPage()
         {
             this.InitializeComponent();
-            var accessToken = _localSettings.Values[Constants.FbAccessTokenName] as string;
-            if (accessToken != null)
+        }
+
+        private void CompleteFbLogin()
+        {
+            FButton.Click -= FbLoginButton_onClick;
+            FButton.Click += NavigateToMap;
+            FButton.Content = "Enter";
+        }
+
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        {
+
+            var fromFb = false;
+
+            try
             {
-                Requests.GetAuthToken(accessToken);
+                var args = (IActivatedEventArgs) e.Parameter;
+
+                if (args?.Kind == ActivationKind.Protocol)
+                {
+                    fromFb = true;
+                }
             }
-            else
+            catch (InvalidCastException)
             {
-                FBFailedBlock.Visibility = Visibility.Visible;
+                // Not facebook login redirect
             }
+            
+            if (_localSettings.Values.ContainsKey(Constants.UserTokenName))
+            {
+                CompleteFbLogin();
+            }
+            else if (fromFb)
+            {
+                var accessToken = _localSettings.Values[Constants.FbAccessTokenName] as string;
+                if (accessToken != null)
+                {
+                    ProgressRingGrid.Visibility = Visibility.Visible;
+                    await Requests.GetAuthToken(accessToken);
+                    ProgressRingGrid.Visibility = Visibility.Collapsed;
+                    CompleteFbLogin();
+                }
+                else
+                {
+                    FbFailedBlock.Visibility = Visibility.Visible;
+                }
+            }
+            
         }
 
         private async void FbLoginButton_onClick(object sender, RoutedEventArgs e)
@@ -55,5 +96,11 @@ namespace AmenityFinder
             };
             //await new Requests().AddLocation(nl);
         }
+
+        private void NavigateToMap(Object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof (MapView));
+        }
+
     }
 }

@@ -8,7 +8,10 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Foundation.Metadata;
 using Windows.Storage;
+using Windows.UI.Core;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -49,6 +52,13 @@ namespace AmenityFinder
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
 
+            if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
+            {
+                var statusbar = StatusBar.GetForCurrentView();
+                statusbar.HideAsync();
+
+            }
+
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
             {
@@ -66,6 +76,7 @@ namespace AmenityFinder
                 rootFrame = new Frame();
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
+                rootFrame.Navigated += OnNavigated;
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
@@ -74,6 +85,13 @@ namespace AmenityFinder
 
                 // Place the frame in the current Window
                 Window.Current.Content = rootFrame;
+
+                SystemNavigationManager.GetForCurrentView().BackRequested += OnBackRequested;
+
+                SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
+                    rootFrame.CanGoBack ?
+                    AppViewBackButtonVisibility.Visible :
+                    AppViewBackButtonVisibility.Collapsed;
             }
 
             if (rootFrame.Content == null)
@@ -109,7 +127,27 @@ namespace AmenityFinder
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: Save application state and stop any background activity
             deferral.Complete();
+        } 
+  
+        // OnNavigated Method  
+        private void OnNavigated(object sender, NavigationEventArgs e)
+        {
+            // Each time a navigation event occurs, update the Back button's visibility  
+            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
+            ((Frame)sender).CanGoBack ? AppViewBackButtonVisibility.Visible : AppViewBackButtonVisibility.Collapsed;
         }
+
+        private void OnBackRequested(object sender, BackRequestedEventArgs e)
+        {
+            var rootFrame = Window.Current.Content as Frame;
+
+            if (rootFrame.CanGoBack)
+            {
+                e.Handled = true;
+                rootFrame.GoBack();
+            }
+        }
+
 
         protected override void OnActivated(IActivatedEventArgs args)
         {
@@ -152,15 +190,7 @@ namespace AmenityFinder
                     Window.Current.Content = rootFrame;
                 }
 
-                if (rootFrame.Content == null)
-                {
-                    // When the navigation stack isn't restored navigate to the first page,
-                    // configuring the new page by passing required information as a navigation
-                    // parameter
-                    rootFrame.Navigate(typeof(MainPage), args);
-                }
-                // Ensure the current window is active
-                Window.Current.Activate();
+                rootFrame.Navigate(typeof (MainPage), args);
             }
         }
     }

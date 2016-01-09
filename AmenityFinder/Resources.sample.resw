@@ -118,11 +118,11 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="FbAppId" xml:space="preserve">
-    <value>625784407575569</value>
+    <value>blahblue</value>
     <comment>Facebook App Id</comment>
   </data>
   <data name="MapServiceToken" xml:space="preserve">
-    <value>aULnjvbc1u3RkGivtu84~yyrrpHL1m4YAw-bQ5VV7tw~AgRmbh6Ek1aEuxCCtrcrM5YCBgZwxKxnY-W0LSTLvW5m52WDDtztr_guAejMqElB</value>
+    <value>bingmapskey</value>
     <comment>Bing Maps Key</comment>
   </data>
 </root>

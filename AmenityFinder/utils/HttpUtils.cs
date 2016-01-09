@@ -135,7 +135,7 @@ namespace AmenityFinder.utils
             var userToken = _localSettings.Values[Constants.UserTokenName] as string;
             if (userToken != null)
             {
-                httpClient.DefaultRequestHeaders.Add("auth-token", userToken);
+                httpClient.DefaultRequestHeaders.Add(Constants.UserTokenName, userToken);
             }
         }
     }

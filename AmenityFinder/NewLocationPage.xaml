@@ -1,0 +1,71 @@
+﻿<Page
+    x:Class="AmenityFinder.NewLocationPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AmenityFinder"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <Page.BottomAppBar>
+        <CommandBar>
+            <CommandBar.Content>
+                <Grid/>
+            </CommandBar.Content>
+            <AppBarButton x:Name="CancelCommand" Icon="Cancel" Label="Cancel" Click="CancelNewLocationAddition"/>
+            <AppBarButton x:Name="AddCommand" Icon="Accept" Label="Add" Click="AddNewLocation_Click"/>
+        </CommandBar>
+    </Page.BottomAppBar>
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.12*"/>
+            <RowDefinition Height="0.25*"/>
+            <RowDefinition Height="0.1*"/>
+            <RowDefinition Height="0.05*"/>
+            <RowDefinition Height="0.05*"/>
+            <RowDefinition Height="0.05*"/>
+            <RowDefinition Height="0.05*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.01*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0" Background="#FF1976D2" Grid.Row="0" Grid.ColumnSpan="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.01*"/>
+                <ColumnDefinition Width="0.98*"/>
+                <ColumnDefinition Width="0.01*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="1" Foreground="#DAFFFFFF" FontSize="40" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="Add New Location" VerticalAlignment="Center"/>
+        </Grid>
+
+        <TextBox x:Name="LocationName" HorizontalAlignment="Stretch" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" FontSize="25" TextWrapping="Wrap" PlaceholderText="Enter Name of Location"/>
+
+        <TextBlock Grid.Row="2" Grid.Column="1" FontSize="30" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="Location"/>
+        <Grid Grid.Row="2" Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock x:Name="Latitude" Grid.Row="0" FontSize="20" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="23.23442" VerticalAlignment="Center"/>
+            <TextBlock x:Name="Longitude" Grid.Row="1" FontSize="20" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="77.2342" VerticalAlignment="Center"/>
+        </Grid>
+        
+        <TextBlock Grid.Row="3" Grid.Column="1" FontSize="20" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="Free?" VerticalAlignment="Center"/>
+        <ToggleSwitch Grid.Row="3" Grid.Column="2" x:Name="IsFree" VerticalAlignment="Center" IsOn="True" />
+
+        <TextBlock Grid.Row="4" Grid.Column="1" FontSize="20" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="For Male?" VerticalAlignment="Center"/>
+        <ToggleSwitch Grid.Row="4" Grid.Column="2" x:Name="IsForMale" VerticalAlignment="Center" IsOn="True" />
+
+        <TextBlock Grid.Row="5" Grid.Column="1" FontSize="20" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="For Female?" VerticalAlignment="Center"/>
+        <ToggleSwitch Grid.Row="5" Grid.Column="2" x:Name="IsForFemale" VerticalAlignment="Center" IsOn="True" />
+
+        <TextBlock Grid.Row="6" Grid.Column="1" FontSize="20" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="Be Anonymous?" VerticalAlignment="Center"/>
+        <ToggleSwitch Grid.Row="6" Grid.Column="2" x:Name="IsAnonymous" VerticalAlignment="Center" IsOn="True" />
+        
+
+    </Grid>
+
+</Page>

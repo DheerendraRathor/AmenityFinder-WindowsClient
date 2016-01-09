@@ -43,4 +43,9 @@ namespace AmenityFinder.models
         public float LongMax { get; set; }
     }
 
+    public class SearchByBBoxResult : AbstractModel
+    {
+        public List<Location> Results { get; set; } 
+    }
+
 }

@@ -1,0 +1,57 @@
+﻿<Page
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AmenityFinder"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:maps="using:Windows.UI.Xaml.Controls.Maps"
+    x:Class="AmenityFinder.MapView"
+    mc:Ignorable="d">
+
+    <Page.BottomAppBar>
+        <CommandBar>
+            <CommandBar.Content>
+                <Grid/>
+            </CommandBar.Content>
+            <AppBarButton x:Name="MapIconButton" Icon="MapPin" Label="Nearest"/>
+            <AppBarButton x:Name="AddNewButton" Icon="Add" Label="New Location" Click="NewLocation_Click"/>
+        </CommandBar>
+    </Page.BottomAppBar>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.12*"/>
+            <RowDefinition Height="0.05*"/>
+            <RowDefinition Height="0.83*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        
+        <maps:MapControl ActualCameraChanged="MapCameraChanged"  ZoomLevel="15" x:Name="MapControl" Grid.Column="0" Grid.RowSpan="3"/>
+        
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="0.1*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Background="#AAFFFFFF" Grid.Column="1" Tapped="CenterMapOnUserPosition">
+                <Image Height="Auto" Width="Auto" Source="Assets/gps-user-loc.png"/>
+            </Grid>
+        </Grid>
+        
+        <Grid x:Name="AddressBarGrid" Grid.Row="0" Background="#FF1E88E5" Visibility="Collapsed">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.01*"/>
+                <ColumnDefinition Width="0.98*"/>
+                <ColumnDefinition Width="0.01*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" FontSize="20" Foreground="#DAFFFFFF" TextAlignment="Center" TextTrimming="CharacterEllipsis" x:Name="AddressBar" Grid.Row="0" TextWrapping="Wrap" Canvas.ZIndex="100"/>
+        </Grid>
+        
+
+    </Grid>
+
+</Page>
+
+

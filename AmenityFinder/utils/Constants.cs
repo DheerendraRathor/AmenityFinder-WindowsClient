@@ -9,7 +9,11 @@ namespace AmenityFinder.utils
     public class Constants
     {
 
-        public const string UserTokenName = "auth-token";
+        public const string KeyFile = "Resources";
+        public const string MapServiceTokenKeyName = "MapServiceToken";
+        public const string FbAppIdName = "FbAppId";
+
+        public const string UserTokenName = "token-auth";
         public const string FbAccessTokenName = "access_token";
         public const int Timeout = 10000;
 

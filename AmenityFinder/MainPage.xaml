@@ -16,14 +16,39 @@
     </Page.BottomAppBar>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Image x:Name="image" HorizontalAlignment="Left" Height="129" Margin="118,105,0,0" VerticalAlignment="Top" Width="124" Source="Assets/Square150x150Logo.png"/>
-        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="75,234,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="40" Width="211" RenderTransformOrigin="0.067,-0.385" Foreground="#FF0A0101" FontSize="26.667">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.4*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="0.2*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="0.2*"/>
+            <RowDefinition Height="0.2*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <Image Grid.Row="1" Source="Assets/Square150x150Logo.png"/>
+        
+        <Grid Grid.Row="2">
+            <TextBlock HorizontalAlignment="Stretch" TextWrapping="Wrap"
+                       TextAlignment="Center" TextTrimming="Clip"
+                       VerticalAlignment="Center" Foreground="#FF0A0101" FontSize="26.667">
         	<Run Text="Washroom Finder"/>
         	<LineBreak/>
         	<Run/>
-        </TextBlock>
-        <Button Click="FbLoginButton_onClick" x:Name="FButton" Content="Login With Facebook" Margin="90,322,0,0" VerticalAlignment="Top" Height="41" Width="167" RenderTransformOrigin="0.583,0.516"/>
-        <TextBlock Visibility="Collapsed" x:Name="FBFailedBlock"  HorizontalAlignment="Left" Margin="111,416,0,0" TextWrapping="Wrap" Text="Facebook Login Failed" VerticalAlignment="Top" Foreground="#FF8B0A0A"/>
+            </TextBlock>
+        </Grid>
+        
+        
+        <Button Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Center" Click="FbLoginButton_onClick" x:Name="FButton" Content="Login With Facebook"/>
+        
+        <TextBlock Grid.Row="6" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed" x:Name="FbFailedBlock" TextWrapping="Wrap" Text="Facebook Login Failed" Foreground="#FF8B0A0A"/>
+        
+        <Grid x:Name="ProgressRingGrid" Visibility="Collapsed" Grid.Row="0" Grid.RowSpan="8" Background="#99FFFFFF">
+            <ProgressRing HorizontalAlignment="Center" VerticalAlignment="Center" IsActive="True" Height="60" Width="60" />
+        </Grid>
+        
+        
 
     </Grid>
 </Page>
