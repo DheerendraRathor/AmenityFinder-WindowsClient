@@ -4,6 +4,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Streams;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.Web.Http;
 using AmenityFinder.exceptions;
 using Polly;
@@ -113,6 +115,7 @@ namespace AmenityFinder.utils
             }
             else if (statusCode == HttpStatusCode.Forbidden)
             {
+                //TODO: Logout user and redirect to main page
                 throw new ForbiddenRequestException();
             }
             else if (statusCode == HttpStatusCode.BadRequest)

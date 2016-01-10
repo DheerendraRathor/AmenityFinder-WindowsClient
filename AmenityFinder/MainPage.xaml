@@ -7,15 +7,12 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <Page.BottomAppBar>
-        <CommandBar>
-            <CommandBar.Content>
-                <Grid/>
-            </CommandBar.Content>
-            <AppBarButton x:Name="SkipButton" Label="Skip" Icon="Forward"/>
+        <CommandBar Background="#1976D2" Foreground="#FFFFFF">
+            <AppBarButton Foreground="#FFFFFF" x:Name="SkipButton" Click="SkipButton_Clicked" Label="Skip" Icon="Forward"/>
         </CommandBar>
     </Page.BottomAppBar>
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Background="#1976D2">
         <Grid.RowDefinitions>
             <RowDefinition Height="0.4*"/>
             <RowDefinition Height="*"/>
@@ -27,12 +24,13 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         
-        <Image Grid.Row="1" Source="Assets/Square150x150Logo.png"/>
+        <Image Grid.Row="1" Source="Assets/Wide310x150Logo.png"/>
         
         <Grid Grid.Row="2">
             <TextBlock HorizontalAlignment="Stretch" TextWrapping="Wrap"
                        TextAlignment="Center" TextTrimming="Clip"
-                       VerticalAlignment="Center" Foreground="#FF0A0101" FontSize="26.667">
+                       VerticalAlignment="Center" Foreground="#FFFFFF" 
+                       FontSize="24">
         	<Run Text="Washroom Finder"/>
         	<LineBreak/>
         	<Run/>
@@ -40,7 +38,14 @@
         </Grid>
         
         
-        <Button Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Center" Click="FbLoginButton_onClick" x:Name="FButton" Content="Login With Facebook"/>
+        <Button Grid.Row="4" VerticalAlignment="Center"
+                HorizontalAlignment="Center" Click="FbLoginButton_onClick"
+                x:Name="FButton" Content="Login With Facebook"
+                Foreground="#FFFFFF"
+                Padding="12"
+                FontWeight="Medium"
+                Background="#3b5998"
+                />
         
         <TextBlock Grid.Row="6" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed" x:Name="FbFailedBlock" TextWrapping="Wrap" Text="Facebook Login Failed" Foreground="#FF8B0A0A"/>
         

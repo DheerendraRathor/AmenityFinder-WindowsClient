@@ -7,62 +7,97 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <Page.BottomAppBar>
-        <CommandBar>
+        <CommandBar x:Name="CommandBar" Background="#1976D2" Foreground="#FFFFFF">
             <CommandBar.Content>
                 <Grid/>
             </CommandBar.Content>
-            <AppBarButton x:Name="CancelCommand" Icon="Cancel" Label="Cancel" Click="CancelNewLocationAddition"/>
-            <AppBarButton x:Name="AddCommand" Icon="Accept" Label="Add" Click="AddNewLocation_Click"/>
+            <AppBarButton Foreground="#FFFFFF" x:Name="CancelCommand" Icon="Cancel" Label="Cancel" Click="CancelNewLocationAddition"/>
+            <AppBarButton Foreground="#FFFFFF" x:Name="AddCommand" Icon="Accept" Label="Add" Click="AddNewLocation_Click"/>
         </CommandBar>
     </Page.BottomAppBar>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.12*"/>
-            <RowDefinition Height="0.25*"/>
-            <RowDefinition Height="0.1*"/>
-            <RowDefinition Height="0.05*"/>
-            <RowDefinition Height="0.05*"/>
-            <RowDefinition Height="0.05*"/>
-            <RowDefinition Height="0.05*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="0.18*"/>
+            <RowDefinition Height="0.11*"/>
+            <RowDefinition Height="0.07*"/>
+            <RowDefinition Height="0.07*"/>
+            <RowDefinition Height="0.07*"/>
+            <RowDefinition Height="0.07*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.01*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
+        
+        <Grid x:Name="ProgressRingGrid" Visibility="Collapsed" Grid.Row="0" Grid.Column="0" Grid.RowSpan="7" Grid.ColumnSpan="3" Background="#99FFFFFF">
+            <ProgressRing Height="80" Width="80" IsActive="True"></ProgressRing>
+        </Grid>
 
-        <Grid Grid.Column="0" Background="#FF1976D2" Grid.Row="0" Grid.ColumnSpan="3">
+        <Grid Grid.Column="0" Background="#1976D2" Grid.Row="0" Grid.ColumnSpan="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.01*"/>
                 <ColumnDefinition Width="0.98*"/>
                 <ColumnDefinition Width="0.01*"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="1" Foreground="#DAFFFFFF" FontSize="40" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="Add New Location" VerticalAlignment="Center"/>
+            <TextBlock Grid.Column="1" Foreground="#EAFFFFFF" FontSize="32" 
+                       Padding="12"
+                       HorizontalAlignment="Stretch"
+                       TextWrapping="Wrap" 
+                       Text="Add New Location" VerticalAlignment="Center"/>
         </Grid>
 
-        <TextBox x:Name="LocationName" HorizontalAlignment="Stretch" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" FontSize="25" TextWrapping="Wrap" PlaceholderText="Enter Name of Location"/>
+        <TextBox TextChanged="LocationName_OnTextChanged" 
+                 x:Name="LocationName"
+                 BorderThickness="0"
+                 HorizontalAlignment="Stretch"
+                 Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" FontSize="20" 
+                 TextWrapping="Wrap" PlaceholderText="Enter Name of Location"/>
 
-        <TextBlock Grid.Row="2" Grid.Column="1" FontSize="30" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="Location"/>
+        <TextBlock Grid.Row="2" Grid.Column="1" 
+                   Padding="8"
+                   Foreground="#88000000"
+                   FontSize="20" HorizontalAlignment="Stretch"
+                   TextWrapping="Wrap" 
+                   Text="Location"/>
         <Grid Grid.Row="2" Grid.Column="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <TextBlock x:Name="Latitude" Grid.Row="0" FontSize="20" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="23.23442" VerticalAlignment="Center"/>
-            <TextBlock x:Name="Longitude" Grid.Row="1" FontSize="20" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="77.2342" VerticalAlignment="Center"/>
+            <TextBlock x:Name="Latitude" Grid.Row="0"
+                       FontSize="16" HorizontalAlignment="Stretch"
+                       TextWrapping="Wrap" Text="23.23442" 
+                       VerticalAlignment="Center"/>
+            <TextBlock x:Name="Longitude" Grid.Row="1" FontSize="16" 
+                       HorizontalAlignment="Stretch" TextWrapping="Wrap" 
+                       Text="77.2342" VerticalAlignment="Center"/>
         </Grid>
-        
-        <TextBlock Grid.Row="3" Grid.Column="1" FontSize="20" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="Free?" VerticalAlignment="Center"/>
+
+        <TextBlock Grid.Row="3" Grid.Column="1" FontSize="20"
+                   Padding="8"
+                   Foreground="#88000000"
+                   HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="Free?" VerticalAlignment="Center"/>
         <ToggleSwitch Grid.Row="3" Grid.Column="2" x:Name="IsFree" VerticalAlignment="Center" IsOn="True" />
 
-        <TextBlock Grid.Row="4" Grid.Column="1" FontSize="20" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="For Male?" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="4" Grid.Column="1" FontSize="20"
+                   Padding="8"
+                   Foreground="#88000000"
+                   HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="For Male?" VerticalAlignment="Center"/>
         <ToggleSwitch Grid.Row="4" Grid.Column="2" x:Name="IsForMale" VerticalAlignment="Center" IsOn="True" />
 
-        <TextBlock Grid.Row="5" Grid.Column="1" FontSize="20" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="For Female?" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="5" Grid.Column="1" FontSize="20" 
+                   Padding="8"
+                   Foreground="#88000000"
+                   HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="For Female?" VerticalAlignment="Center"/>
         <ToggleSwitch Grid.Row="5" Grid.Column="2" x:Name="IsForFemale" VerticalAlignment="Center" IsOn="True" />
 
-        <TextBlock Grid.Row="6" Grid.Column="1" FontSize="20" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="Be Anonymous?" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="6" Grid.Column="1" FontSize="20"
+                   Padding="8"
+                   Foreground="#88000000"
+                   HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="Be Anonymous?" VerticalAlignment="Center"/>
         <ToggleSwitch Grid.Row="6" Grid.Column="2" x:Name="IsAnonymous" VerticalAlignment="Center" IsOn="True" />
         
 

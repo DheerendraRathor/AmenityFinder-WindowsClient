@@ -9,26 +9,61 @@
     mc:Ignorable="d">
 
     <Page.BottomAppBar>
-        <CommandBar>
+        <CommandBar Background="#1976D2" Foreground="#FFFFFF">
             <CommandBar.Content>
                 <Grid/>
             </CommandBar.Content>
-            <AppBarButton x:Name="MapIconButton" Icon="MapPin" Label="Nearest"/>
-            <AppBarButton x:Name="AddNewButton" Icon="Add" Label="New Location" Click="NewLocation_Click"/>
+            <AppBarButton Foreground="#FFFFFF" Click="LogoutButton_OnClick" x:Name="LogoutButton" Icon="Permissions" Label="Logout"/>
+            <AppBarButton Foreground="#FFFFFF" x:Name="AddNewButton" Icon="Add" Label="New Location" Click="NewLocation_Click"/>
         </CommandBar>
     </Page.BottomAppBar>
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.12*"/>
+            <RowDefinition Height="0.1*"/>
             <RowDefinition Height="0.05*"/>
-            <RowDefinition Height="0.83*"/>
+            <RowDefinition Height="0.1*"/>
+            <RowDefinition Height="0.73*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         
-        <maps:MapControl ActualCameraChanged="MapCameraChanged"  ZoomLevel="15" x:Name="MapControl" Grid.Column="0" Grid.RowSpan="3"/>
+        <Grid Tapped="LocationMarkerDetails_OnTapped" x:Name="LocationMarkerDetails"
+              Grid.Row="0" Visibility="Collapsed"
+              Height="Auto" Grid.RowSpan="2" Background="#1976D2" Canvas.ZIndex="200">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="0.25*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Padding="4" Grid.Column="1"
+                        VerticalAlignment="Center" >
+                <TextBlock Foreground="#DAFFFFFF" x:Name="LocationName" FontSize="24"
+                           Text="Blah" TextTrimming="CharacterEllipsis"></TextBlock>
+                <TextBlock Foreground="#DAFFFFFF" x:Name="LocationCoordinates" FontSize="12" 
+                           Text="10.000&#x00B0;, 10.232&#x00B0;"></TextBlock>
+            </StackPanel>
+            <StackPanel Grid.Column="0" Padding="8"
+                        VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Image
+                   x:Name="LocationTypeIcon" 
+                   Source="Assets/pin_25.png"
+                   Height="24"/>
+                <TextBlock Foreground="#DAFFFFFF" 
+                           HorizontalAlignment="Center"
+                           x:Name="IsLocationFree" FontSize="12" 
+                           Padding="4"
+                           Text="FREE"></TextBlock>
+            </StackPanel>
+
+            <TextBlock Grid.Column="2" Foreground="#DAFFFFFF" x:Name="Rating" FontSize="20" 
+                           Text="0.0"
+                        VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+
+        </Grid>
+        
+        <maps:MapControl Loaded="MapControl_OnLoaded" MapElementClick="MapControl_OnMapElementClick" ActualCameraChanged="MapCameraChanged"  ZoomLevel="15" x:Name="MapControl" Grid.Row="0" Grid.RowSpan="4"/>
         
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
@@ -39,7 +74,7 @@
                 <Image Height="Auto" Width="Auto" Source="Assets/gps-user-loc.png"/>
             </Grid>
         </Grid>
-        
+
         <Grid x:Name="AddressBarGrid" Grid.Row="0" Background="#FF1E88E5" Visibility="Collapsed">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.01*"/>
@@ -48,7 +83,6 @@
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" FontSize="20" Foreground="#DAFFFFFF" TextAlignment="Center" TextTrimming="CharacterEllipsis" x:Name="AddressBar" Grid.Row="0" TextWrapping="Wrap" Canvas.ZIndex="100"/>
         </Grid>
-        
 
     </Grid>
 

@@ -1,28 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.Devices.Geolocation;
-using Windows.Devices.Geolocation.Geofencing;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Foundation.Metadata;
 using Windows.Services.Maps;
-using Windows.Storage;
 using Windows.Storage.Streams;
-using Windows.UI;
 using Windows.UI.Core;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Maps;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using AmenityFinder.models;
 using AmenityFinder.utils;
@@ -42,18 +30,31 @@ namespace AmenityFinder
         private MapIcon _newLocationIcon = new MapIcon();
         private bool _firstAdded = false;
         private IAsyncOperation<MapLocationFinderResult> _futureResult;
-        private AppViewBackButtonVisibility previousAppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
+        private AppViewBackButtonVisibility _previousAppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
+        private DateTime _bboxFiringTime = DateTime.Now;
+        private Dictionary<int, Location> _locationMarkers = new Dictionary<int, Location>(); 
+        private Dictionary<MapIcon, int> _locationMarkerIcons = new Dictionary<MapIcon, int>();
+
+        private Location _currentTappedLocation;
 
         public MapView()
         {
             this.InitializeComponent();
             MapControl.MapServiceToken = keysLoader.GetString(Constants.MapServiceTokenKeyName);
             MapService.ServiceToken = MapControl.MapServiceToken;
-            
-            _userLocation = new MapIcon();
-            _userLocation.Image = RandomAccessStreamReference.CreateFromUri(new Uri("ms-appx:///Assets/UserLocation.png"));
-            _userLocation.Title = "Your Location";
-            _userLocation.NormalizedAnchorPoint = new Point(0.5, 0.5);
+
+            _userLocation = new MapIcon
+            {
+                Image = RandomAccessStreamReference.CreateFromUri(new Uri("ms-appx:///Assets/UserLocation.png")),
+                Title = "Your Location",
+                NormalizedAnchorPoint = new Point(0.5, 0.5)
+            };
+
+            if (!Core.IsUserLoggedIn())
+            {
+                AddNewButton.Visibility = Visibility.Collapsed;
+                LogoutButton.Visibility = Visibility.Collapsed;
+            }
 
         }
 
@@ -120,14 +121,31 @@ namespace AmenityFinder
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             UpdateLocation();
+            MapCameraChanged(MapControl, null);
         }
 
-        private void SearchByBBoxTaskCompletion(Task<SearchByBBoxResult> searchByBBoxResult)
+        private void SearchByBBoxTaskCompletion(SearchByBBoxResult searchByBBoxResult)
         {
-            SearchByBBoxResult result = searchByBBoxResult.Result;
-            foreach (var location in result.Results)
+            
+            foreach (var location in searchByBBoxResult.Results)
             {
-                bool a = true;
+                if (!_locationMarkers.ContainsKey(location.Id))
+                {
+                    var mapIcon = new MapIcon
+                    {
+                        Location = new Geopoint(new BasicGeoposition
+                        {
+                            Latitude = location.Latitude,
+                            Longitude = location.Longitude
+                        }),
+                        NormalizedAnchorPoint = new Point(0.5, 1.0),
+                        Image = RandomAccessStreamReference.CreateFromUri(new Uri("ms-appx:///Assets/pin_green_25.png")),
+                    };
+                    MapControl.MapElements.Add(mapIcon);
+                    _locationMarkerIcons[mapIcon] = location.Id;
+                }
+                _locationMarkers[location.Id] = location;
+
             }
         }
 
@@ -158,36 +176,36 @@ namespace AmenityFinder
 
         private SearchByBBox GetBoundingBox()
         {
-            Geopoint bottomLeft, topRight;
-            var w2 = MapControl.ActualWidth;
-            var h2 = MapControl.ActualHeight;
+            Geopoint topLeft, bottomRight;
+            var width = MapControl.ActualWidth;
+            var height = MapControl.ActualHeight;
 
             try
             {
-                MapControl.GetLocationFromOffset(new Point(0, 0), out bottomLeft);
+                MapControl.GetLocationFromOffset(new Point(0, 0), out topLeft);
             }
             catch (ArgumentException)
             {
-                MapControl.GetLocationFromOffset(new Point(0, h2), out bottomLeft);
-                bottomLeft = new Geopoint(new BasicGeoposition() {Latitude = -90, Longitude = bottomLeft.Position.Longitude});
+                MapControl.GetLocationFromOffset(new Point(0, height), out topLeft);
+                topLeft = new Geopoint(new BasicGeoposition() {Latitude = -90, Longitude = topLeft.Position.Longitude});
             }
 
             try
             {
-                MapControl.GetLocationFromOffset(new Point(w2, h2), out topRight);
+                MapControl.GetLocationFromOffset(new Point(width, height), out bottomRight);
             }
             catch (ArgumentException)
             {
-                MapControl.GetLocationFromOffset(new Point(w2, 0), out topRight);
-                topRight = new Geopoint(new BasicGeoposition() {Latitude = 90, Longitude = topRight.Position.Longitude});
+                MapControl.GetLocationFromOffset(new Point(width, 0), out bottomRight);
+                bottomRight = new Geopoint(new BasicGeoposition() {Latitude = 90, Longitude = bottomRight.Position.Longitude});
             }
 
             var bbox = new SearchByBBox
             {
-                LatMin = (float) bottomLeft.Position.Latitude,
-                LongMin = (float) bottomLeft.Position.Longitude,
-                LatMax = (float) topRight.Position.Latitude,
-                LongMax = (float) topRight.Position.Longitude
+                LatMax = (float) topLeft.Position.Latitude,
+                LongMin = (float) topLeft.Position.Longitude,
+                LatMin = (float) bottomRight.Position.Latitude,
+                LongMax = (float) bottomRight.Position.Longitude
             };
 
             return bbox;
@@ -200,12 +218,13 @@ namespace AmenityFinder
             AddNewButton.Label = "Continue";
             AddNewButton.Click -= NewLocation_Click;
             AddNewButton.Click += ContinueAddingNewLocation;
+            AddNewButton.Visibility = Visibility.Collapsed;
 
-            MapIconButton.Visibility = Visibility.Collapsed;
+            LocationMarkerDetails.Visibility = Visibility.Collapsed;
               
             MapControl.MapTapped += PinLocationOnMap;
 
-            previousAppViewBackButtonVisibility =
+            _previousAppViewBackButtonVisibility =
                 SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility;
             SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
             SystemNavigationManager.GetForCurrentView().BackRequested += CancelNewLocation;
@@ -224,6 +243,7 @@ namespace AmenityFinder
 
             if (!_firstAdded)
             {
+                AddNewButton.Visibility = Visibility.Visible;
                 _firstAdded = true;
                 _newLocationIcon.Image =
                     RandomAccessStreamReference.CreateFromUri(new Uri("ms-appx:///Assets/pin_25.png"));
@@ -241,14 +261,12 @@ namespace AmenityFinder
             AddNewButton.Click -= ContinueAddingNewLocation;
             AddNewButton.Click += NewLocation_Click;
 
-            MapIconButton.Visibility = Visibility.Visible;
-
             MapControl.MapTapped -= PinLocationOnMap;
             MapControl.MapElements.Remove(_newLocationIcon);
             _firstAdded = false;
 
             SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
-                previousAppViewBackButtonVisibility;
+                _previousAppViewBackButtonVisibility;
             SystemNavigationManager.GetForCurrentView().BackRequested -= CancelNewLocation;
             e.Handled = true;
 
@@ -274,14 +292,70 @@ namespace AmenityFinder
                 Longitude = (float) _newLocationIcon.Location.Position.Longitude
             };
 
-            this.Frame.Navigate(typeof (NewLocationPage), newLocation);
+            Frame.Navigate(typeof (NewLocationPage), newLocation);
         }
 
-        private void MapCameraChanged(MapControl mapControl, MapActualCameraChangedEventArgs args)
+        private async void MapCameraChanged(MapControl mapControl, MapActualCameraChangedEventArgs args)
         {
+            var currentTime = DateTime.Now;
+            var timeElapsed = currentTime - _bboxFiringTime;
+            if (timeElapsed.TotalSeconds > 1)
+            {
+                _bboxFiringTime = currentTime;
+            }
+            else
+            {
+                return;
+            }
             var boundingBox = GetBoundingBox();
-            var searchByBboxResult = Requests.GetLocationByBBox(boundingBox);
-            searchByBboxResult.ContinueWith(SearchByBBoxTaskCompletion);
+            var searchByBboxResult = await Requests.GetLocationByBBox(boundingBox);
+            SearchByBBoxTaskCompletion(searchByBboxResult);
+        }
+
+        private void MapControl_OnMapElementClick(MapControl sender, MapElementClickEventArgs args)
+        {
+            var clickedIcon = args.MapElements.FirstOrDefault(x => x is MapIcon) as MapIcon;
+            Location location;
+            try
+            {
+                location = _locationMarkers[_locationMarkerIcons[clickedIcon]];
+            }
+            catch (KeyNotFoundException)
+            {
+                return;
+            }
+
+            if (_currentTappedLocation != null)
+            {
+                if (location.Id == _currentTappedLocation.Id)
+                {
+                    LocationMarkerDetails_OnTapped(MapControl, null);
+                }
+            }
+
+            IsLocationFree.Text = location.GetPriceText();
+            LocationTypeIcon.Source = location.GetLocationIcon();
+            LocationName.Text = location.Name;
+            LocationCoordinates.Text = location.GetCoordinatesAsString();
+            Rating.Text = location.GetRating();
+            LocationMarkerDetails.Visibility = Visibility.Visible;
+
+            _currentTappedLocation = location;
+        }
+
+        private void LocationMarkerDetails_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            Frame.Navigate(typeof (LocationDetailPage), _currentTappedLocation);
+        }
+
+        private void LogoutButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            Core.LogoutUser(this, true);
+        }
+
+        private void MapControl_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            MapCameraChanged(MapControl, null);
         }
     }
 }

@@ -106,6 +106,9 @@
     <Compile Include="fblogin\FbLogin.xaml.cs">
       <DependentUpon>FbLogin.xaml</DependentUpon>
     </Compile>
+    <Compile Include="LocationDetailPage.xaml.cs">
+      <DependentUpon>LocationDetailPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -113,17 +116,24 @@
       <DependentUpon>MapView.xaml</DependentUpon>
     </Compile>
     <Compile Include="models\AbstractModel.cs" />
+    <Compile Include="models\AbstractUserContainer.cs" />
+    <Compile Include="models\Picture.cs" />
     <Compile Include="NewLocationPage.xaml.cs">
       <DependentUpon>NewLocationPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="utils\Constants.cs" />
+    <Compile Include="utils\Core.cs" />
     <Compile Include="utils\HttpUtils.cs" />
     <Compile Include="models\Location.cs" />
     <Compile Include="models\Post.cs" />
     <Compile Include="models\User.cs" />
+    <Compile Include="utils\Icons.cs" />
     <Compile Include="utils\Json.cs" />
     <Compile Include="utils\Requests.cs" />
+    <Compile Include="utils\TabHeader.xaml.cs">
+      <DependentUpon>TabHeader.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -132,12 +142,20 @@
     <None Include="AmenityFinder_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\amfi.png" />
+    <Content Include="Assets\anon_face.png" />
+    <Content Include="Assets\female.png" />
     <Content Include="Assets\gps-user-loc.png" />
+    <Content Include="Assets\icon-camera.png" />
+    <Content Include="Assets\image_placeholder.png" />
+    <Content Include="Assets\male.png" />
     <Content Include="Assets\pin.png" />
     <Content Include="Assets\pin_25.png" />
     <Content Include="Assets\pin_50.png" />
     <Content Include="Assets\pin_75.png" />
+    <Content Include="Assets\pin_green_25.png" />
     <Content Include="Assets\UserLocation.png" />
+    <Content Include="Assets\washroom.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -156,6 +174,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="LocationDetailPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -167,6 +189,15 @@
     <Page Include="NewLocationPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="utils\TabHeader.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="utils\TabPivotStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
   </ItemGroup>
   <ItemGroup>

@@ -1,24 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using AmenityFinder.models;
 using AmenityFinder.utils;
-using static AmenityFinder.utils.Requests;
-
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
 namespace AmenityFinder
 {
@@ -32,10 +19,17 @@ namespace AmenityFinder
         public MainPage()
         {
             this.InitializeComponent();
+
+            if (Core.IsUserLoggedIn())
+            {
+                SkipButton.Visibility = Visibility.Collapsed;
+                SkipButton.Height = 0;
+            }
         }
 
         private void CompleteFbLogin()
         {
+            this.Frame.Navigate(typeof (MapView));
             FButton.Click -= FbLoginButton_onClick;
             FButton.Click += NavigateToMap;
             FButton.Content = "Enter";
@@ -102,5 +96,9 @@ namespace AmenityFinder
             this.Frame.Navigate(typeof (MapView));
         }
 
+        private void SkipButton_Clicked(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof (MapView));
+        }
     }
 }

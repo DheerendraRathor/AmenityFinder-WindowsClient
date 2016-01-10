@@ -19,6 +19,7 @@ namespace AmenityFinder.utils
             var responseData = await HttpUtils.ProcessResponse(httpResponseMessage);
             var authModel = JsonConvert.DeserializeObject<AuthenticationResponseModel>(responseData);
             _localSettings.Values[Constants.UserTokenName] = authModel.Token;
+            _localSettings.Values[Constants.UidFieldName] = authModel.Uid;
 
         }
 
@@ -37,12 +38,33 @@ namespace AmenityFinder.utils
             var httpResponseMessage =
                 await HttpUtils.MakeRequest(Constants.LocationSearchByBBoxUrl, jsonData, HttpUtils.HttpMethod.Post);
             var responseData = await HttpUtils.ProcessResponse(httpResponseMessage);
-            var locationList = JsonConvert.DeserializeObject<SearchByBBoxResult>(responseData);
-
+            var locationList = JsonConvert.DeserializeObject<SearchByBBoxResult>(responseData, new JsonSerializerSettings {ContractResolver = new SnakeCasePropertyNamesContractResolver()});
             return locationList;
         }
 
-        //public async Task<List<Location>> GetLocationByBBox()
+        public static async Task<PaginatedPosts> GetPaginatedPosts(Location location)
+        {
+            var urlString = string.Format(Constants.LocationGetPostsUrl, location.Id);
+
+            var httpResponseMessage = await HttpUtils.MakeRequest(urlString, null, HttpUtils.HttpMethod.Get);
+            var responseData = await HttpUtils.ProcessResponse(httpResponseMessage);
+
+            var paginatedPosts = AbstractModel.Deserialize<PaginatedPosts>(responseData);
+
+            return paginatedPosts;
+        }
+
+        public static async Task<PaginatedPictures> GetPaginatedPictures(Location location)
+        {
+            var urlString = string.Format(Constants.LocationGetPicturesUrl, location.Id);
+
+            var httpResponseMessage = await HttpUtils.MakeRequest(urlString, null, HttpUtils.HttpMethod.Get);
+            var responseData = await HttpUtils.ProcessResponse(httpResponseMessage);
+
+            var paginatedPictures = AbstractModel.Deserialize<PaginatedPictures>(responseData);
+
+            return paginatedPictures;
+        }
 
     }
 }

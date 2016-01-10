@@ -1,17 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using AmenityFinder.models;
 using AmenityFinder.utils;
@@ -43,19 +33,23 @@ namespace AmenityFinder
             {
                 LocationName.Text = newLocation.Name;
             }
+            else
+            {
+                AddCommand.Visibility = Visibility.Collapsed;
+            }
 
             base.OnNavigatedTo(e);
         }
 
         private void CancelNewLocationAddition(object sender, RoutedEventArgs e)
         {
-            if (this.Frame.CanGoBack)
+            if (Frame.CanGoBack)
             {
-                this.Frame.GoBack();
+                Frame.GoBack();
             }
         }
 
-        private void AddNewLocation_Click(object sender, RoutedEventArgs e)
+        private async void AddNewLocation_Click(object sender, RoutedEventArgs e)
         {
             var newLocation = new NewLocation
             {
@@ -68,11 +62,21 @@ namespace AmenityFinder
                 IsAnonymous = IsAnonymous.IsOn
             };
 
-            AddCommand.IsTapEnabled = false;
-            CancelCommand.IsTapEnabled = false;
+            ProgressRingGrid.Visibility = Visibility.Visible;
+            CommandBar.Visibility = Visibility.Collapsed;
+            await Requests.AddLocation(newLocation);
+            ProgressRingGrid.Visibility = Visibility.Collapsed;
 
-            Requests.AddLocation(newLocation);
+            if (Frame.CanGoBack)
+            {
+                Frame.GoBack();
+            }
 
+        }
+
+        private void LocationName_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            AddCommand.Visibility = string.IsNullOrWhiteSpace(LocationName.Text) ? Visibility.Collapsed : Visibility.Visible;
         }
     }
 }

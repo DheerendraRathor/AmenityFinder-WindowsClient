@@ -121,8 +121,14 @@
     <value>625784407575569</value>
     <comment>Facebook App Id</comment>
   </data>
+  <data name="HintTextColor" xml:space="preserve">
+    <value>#65000000</value>
+  </data>
   <data name="MapServiceToken" xml:space="preserve">
     <value>aULnjvbc1u3RkGivtu84~yyrrpHL1m4YAw-bQ5VV7tw~AgRmbh6Ek1aEuxCCtrcrM5YCBgZwxKxnY-W0LSTLvW5m52WDDtztr_guAejMqElB</value>
     <comment>Bing Maps Key</comment>
+  </data>
+  <data name="SecondaryTextColor" xml:space="preserve">
+    <value>#DA000000</value>
   </data>
 </root>

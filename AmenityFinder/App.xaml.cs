@@ -94,6 +94,11 @@ namespace AmenityFinder
                     AppViewBackButtonVisibility.Collapsed;
             }
 
+            if (Core.IsUserLoggedIn())
+            {
+                rootFrame.Navigate(typeof (MapView), e.Arguments);
+            }
+
             if (rootFrame.Content == null)
             {
                 // When the navigation stack isn't restored navigate to the first page,
@@ -190,7 +195,7 @@ namespace AmenityFinder
                     Window.Current.Content = rootFrame;
                 }
 
-                rootFrame.Navigate(typeof (MainPage), args);
+                rootFrame.Navigate(Core.IsUserLoggedIn() ? typeof (MapView) : typeof (MainPage), args);
             }
         }
     }
